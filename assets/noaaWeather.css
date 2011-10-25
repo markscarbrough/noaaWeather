@@ -1,0 +1,44 @@
+/**
+ * NoaaWeather css file.
+ *
+ * @author Mark Scarbrough <markscarbrough@gmail.com>
+ * @license http://www.yiiframework.com/license/
+ */
+ 
+ /* NoaaCurrentObservationsWidget classes */
+div.noaaCurrentObservationsPortlet{width:100%;}
+img.noaaCurrentObservationsIcon{margin-left: 5px; margin-top: 5px;}
+div.noaaCurrentObservationsBody{margin-left: 80px;}
+div.noaaCurrentObservationsFooter{font-size:80%}
+
+/* NoaaMapClickWidget classes */
+div.noaaForecastMapClickPortlet{width:100%;}
+table.noaaForecastMapClickWrapper{margin:0;padding:0;}
+td.noaaForecastMapClickWrapper{vertical-align:top;}
+table.noaaForecastMapClickInner{margin:0;height:100%;width:100%;}
+td.noaaForecastMapClickInnerHeader{padding:0;vertical-align: top;}
+td.noaaForecastMapClickInnerData{vertical-align: top;padding:5px 0 0 5px;}
+td.noaaForecastMapClickInnerFooter{text-align:center;vertical-align:top;}
+
+/* NoaaForecastAllWidget classes */
+/* Tabs */
+div.noaaForecastAllJuiTabs{width:100%;}
+div.noaaForecastAllTabWrapper{text-align:center;font-size:80%;width:72px;}
+div.noaaForecastAllTabHeader{font-weight:bold;}
+img.noaaForecastAllTabIcon{padding:2px 0 2px 0;}
+div.noaaForecastAllTabFooter{font-size:80%;}
+/* Summary */
+td.noaaForecastAllContentHeader{font-weight:bold;}
+td.noaaForecastAllSummaryWrapper{font-size:90%;vertical-align:top;padding:0 0 0 7px;width:50%;height:160px;}
+td.noaaForecastAllSummaryHeader{font-weight:bold;}
+td.noaaForecastAllSummaryIcon{width:60px;vertical-align:top;}
+td.noaaForecastAllSummaryText{width:100%;vertical-align:top;font-size:88%;}
+/* Detail */
+td.noaaForecastAllDetailWrapper{font-size:80%;vertical-align:top;padding:0;}
+th.noaaForecastAllDetailHeader{width:20%;text-align:center;}
+td.noaaForecastAllDetailBody{text-align:center;}
+
+
+
+
+

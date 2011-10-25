@@ -1,0 +1,209 @@
+NOAA WEATHER EXTENSION FOR YII FRAMEWORK
+
+The NOAA Weather Extension implements Yii widgets, data providers and behaviors that work with data provided by the U.S. National Oceanic and Atmospheric Administration (NOAA) and the National Weather Service (NWS). Features include:
+
+ - Pre-made weather widgets you can quickly add to your site
+ - Multiple data providers that allow access to raw weather data
+ - Data lookup by METAR weather station or coordinates
+ - Data download retry and cache behaviors
+ - Unlike proprietary services, all weather data is in the public domain
+
+This extension makes every effort to follow the NOAA/NWS web service usage guidelines, please be respectful and do the same:
+http://www.nws.noaa.gov/mdl/XML/Design/WebServicesUseGuildlines.php
+
+
+INSTALLATION
+
+Extract the noaaWeather package into your application's protected/extensions directory. The extension must be installed under the 'ext.noaaWeather' path alias to work properly. While designed to work out of the box, further configuration of the cache and database objects may be required in your environment.
+
+By default the extension will create a file cache repository in its own 'cache' subdirectory. This path must be writeable by the webserver. If required, the cache path can be configured by merging the following key into the application-level parameters array in the main web configuration file (main.php):
+
+// application-level parameters that can be accessed
+// using Yii::app()->params['paramName']
+'params'=>array(
+	// CFileCache uses this cachePath by default
+	// Set to null to use the default application file cache path
+	'noaaWeather.cachePath' => 'protected/extensions/noaaWeather/cache'
+	)	
+	
+The extension is preconfigured to use an included sqlite database and should work with no configuration. If you need to use another database, import the sql files found in the extensionÕs data subdirectory, then configure your database connection by merging the following key into the application-level parameters array in the main web configuration file (main.php):
+
+// application-level parameters that can be accessed
+// using Yii::app()->params['paramName']
+'params'=>array(
+	// CDBConnection uses this database configuration by default
+	// Set this parameter to null to use the application database connection 
+	'noaaWeather.dbConfig' => array(
+		'dsn' => 'sqlite:protected/extensions/noaaWeather/data/noaa_weather.db',
+		'username' => '',
+		'password' => '',
+	),
+)
+
+
+USAGE
+
+WIDGETS
+Several widgets are included as examples. Start here if you just want to display weather information on your page.
+
+CURRENT OBSERVATIONS WIDGET
+Displays the latest observed conditions for the nearest NWS METAR station using a Yii portlet widget.
+
+$this->widget('ext.noaaWeather.NoaaCurrentObservationsWidget',array(
+	// Required location can be coordinates or a weather station
+	'location' => array('weatherStation' => 'KMWN'),
+	// Optional params are passed to the view to customize the display
+	'params' => array(
+		'title' => 'Mount Washington Current Conditions',
+		'errorMsg' => 'Error fetching current conditions.',
+		),
+	)
+);
+	
+
+FORECAST MAPCLICK WIDGET
+Displays summary forecast information using a Yii portlet widget.
+
+$this->widget('ext.noaaWeather.NoaaForecastMapClickWidget',array(
+	// Required location can be coordinates or a weather station
+	'location' => 'coordinates'=>array(
+		'latitude' => 44.27,
+		'longitude' => -71.3,
+		),
+	// Optional params are passed to the view to customize the display
+	'params' => array(
+		'title' => 'Mount Washington Forecast',
+		'errorMsg' => 'Error fetching forecast.',
+		'dayOffset' => 0,
+		'numDays' => 5,
+		),
+	)
+);
+
+
+FORECAST ALL WIDGET
+Displays master/detail forecast information using a CJuiTabs widget.
+
+$this->widget('ext.noaaWeather.NoaaForecastAllWidget',array(
+	// Required location can be coordinates or a weather station
+	'location' => 'coordinates'=>array(
+		'latitude' => 44.27,
+		'longitude' => -71.3,
+		),
+	// Optional params are passed to the view to customize the display
+	'params' => array(
+		'errorMsg' => 'Error fetching forecast.',
+		'dayOffset' => 0,
+		'numDays' => 5,
+		),
+	)
+);
+
+
+CUSTOMIZING WIDGETS
+The look and feel of noaaWeather widgets can be customized without changing the widget logic by providing your own css, view files, or icons and configuring the widget as follows:
+
+$this->widget('ext.noaaWeather.NoaaForecastAllWidget',array(
+	// Required location can be coordinates or a weather station
+	'location' => 'coordinates'=>array('latitude' => 44.27,'longitude' => -71.3),
+	// The view file to load
+	'viewFile' => 'myViewFile',
+	// The path to search for view files
+	'viewPath' => 'views/site/',
+	// A published asset url
+	'assetUrl' => '/yii/published/url'
+	// The name of the css file to register with the asset manager
+	'cssFile' => 'my.css',
+	)
+);
+	
+
+DATA PROVIDERS
+The NOAA Weather extension implements access to National Weather Service data in terms of Yii data providers that can be used within your application or to create your own weather widgets.
+
+
+CURRENT OBSERVATION DATA PROVIDER
+This component gathers data from the NWS XML feeds of current weather conditions. It provides access to hourly observation data from NWS METAR stations across the US. 
+More information: http://www.weather.gov/xml/current_obs/ 
+
+$currentDataProvider = Yii::createComponent(
+	'ext.noaaWeather.NoaaCurrentObservationsDataProvider',
+	'coordinates'=>array(
+			'latitude' => 44.27,
+			'longitude' => -71.3,
+	)
+);
+$weather = $currentDataProvider->getData();
+
+
+FORECAST MAPCLICK DATA PROVIDER
+This component gathers data from the NWS map click forecast page. It provides access to the same familiar forecast information displayed when you search http://www.weather.gov/ 
+More information: http://www.nws.noaa.gov/forecasts/xml/
+
+$mapClickDataProvider = Yii::createComponent(
+	'ext.noaaWeather.NoaaForecastMapClickDataProvider',
+	'coordinates'=>array(
+			'latitude' => 44.27,
+			'longitude' => -71.3,
+		)	
+	);
+$weather = $mapClickDataProvider->getData();
+
+
+FORECAST SUMMARY DATA PROVIDER
+This component gathers data from the NWS National Digital Forecast Database REST Service Single Point Summarized Data interface. It provides access to summarized forecast information.
+More information: http://graphical.weather.gov/xml/rest.php
+
+$summaryDataProvider = Yii::createComponent(
+	'ext.noaaWeather.NoaaForecastSummaryDataProvider',
+	'coordinates'=>array(
+			'latitude' => 44.27,
+			'longitude' => -71.3,
+		)	
+	);
+$weather = $summaryDataProvider->getData();
+
+
+FORECAST DETAIL DATA PROVIDER
+This component gathers data from the NWS National Digital Forecast Database REST Service Single Point Unsummarized Data interface. It provides access to detailed hourly forecast information.
+More information: http://graphical.weather.gov/xml/rest.php
+
+$detailDataProvider = Yii::createComponent(
+	'ext.noaaWeather.NoaaForecastDetailDataProvider',
+	'coordinates'=>array(
+			'latitude' => 44.27,
+			'longitude' => -71.3,
+		)	
+	);
+$weather = $detailDataProvider->getData();
+
+
+WORKING WITH FORMATTED DATA
+The above data providers implement a getDataFormatted method that nomalizes weather data and formats it in an associative array rather than raw tabular format. Formatted arrays from multiple data providers can be merged using the php array_merge functions. See the noaaForecastAllWidget source code for an example.
+
+SQL Data Provider
+This component provides the extension with access to the Yii database system. This is required to lookup METAR stations in the noaa_weather_stations table. This data comes from http://www.weather.gov/data/current_obs/index.xml
+More information: http://www.weather.gov/xml/current_obs/
+
+$weatherStations = Yii::createComponent('ext.noaaWeather.NoaaSqlDataProvider',
+	'SELECT * FROM noaa_weather_stations');
+
+
+BEHAVIORS
+NOAA Weather behaviors implement shared functionality required to process weather data and can be attached to components when developing additional data providers. An overview of functionality is included here, see the class source files for more information.
+
+
+CACHE BEHAVIOR
+Caches downloaded data to improve application performance and reduce the load on the NOAA servers.
+
+
+LOCATION BEHAVIOR
+Translates location data between formats using locator methods. Currently supports Latitude/Longitude and NWS Weather Station ID locators.
+
+
+PARSE DWML BEHAVIOR
+Parses a subset of the DWML xml schema.
+
+
+FETCH REMOTE BEHAVIOR
+Fetches data from the NOAA servers using the HTTP GET method. Failed downloads are retried using an exponential backoff method.
