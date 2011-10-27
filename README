@@ -1,6 +1,6 @@
 NOAA WEATHER EXTENSION FOR YII FRAMEWORK
 
-The NOAA Weather Extension implements Yii widgets, data providers and behaviors that work with data provided by the U.S. National Oceanic and Atmospheric Administration (NOAA) and the National Weather Service (NWS). Features include:
+The NOAA Weather Extension works with data provided by the U.S. National Oceanic and Atmospheric Administration (NOAA) and the National Weather Service (NWS). Features include:
 
  - Pre-made weather widgets you can quickly add to your site
  - Data providers that allow full access to raw weather data
@@ -8,6 +8,6 @@ The NOAA Weather Extension implements Yii widgets, data providers and behaviors 
  - Intelligent download retry and cache behaviors
  - Unlike proprietary services, all weather data is in the public domain
 
-Please visit the official extension page for documentation:
+Please visit the official extension page for complete documentation:
 http://www.yiiframework.com/extension/noaaweather/
 
