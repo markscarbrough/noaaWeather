@@ -87,13 +87,7 @@ class NoaaForecastDetailDataProvider extends CArrayDataProvider {
 			
 			foreach( $periods as $periodKey => $periodVal ) {
 				if(in_array($hour,$periodVal['hours'])) {
-					if( ! isset($periodVal['current']) ) {
-						$periods[$periodKey]['current'] = $hour;
 						$forecast[$day][$id][$periodKey] = $forecastRow;
-					} elseif($hour == $periodVal['current']) {
-						$forecast[$day][$id][$periodKey] = $forecastRow;
-					}
-					break;
 				}
 			}
 		}
