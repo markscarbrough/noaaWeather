@@ -77,7 +77,7 @@ class NoaaForecastDetailDataProvider extends CArrayDataProvider {
 			'evening' => array('hours' => array(16,17,18,19,20,21)),
 			'night' => array('hours' => array(22,23,24,0,1,2,3)),
 			);
-		foreach( array_reverse($this->getData()) as $forecastRow ){
+		foreach( $this->getData() as $forecastRow ){
 			$hour = date( 'G', strtotime($forecastRow['start_valid_time']));
 			if($hour < 4) {
 				$day = date("Y-m-d", mktime(0, 0, 0, date( 'm', strtotime($forecastRow['start_valid_time'])), date( 'd', strtotime($forecastRow['start_valid_time'])) - 1, date( 'Y', strtotime($forecastRow['start_valid_time']))));
@@ -91,7 +91,7 @@ class NoaaForecastDetailDataProvider extends CArrayDataProvider {
 				}
 			}
 		}
-		return array('forecast'=>array_reverse($forecast,true));
+		return array('forecast'=>$forecast,true);
 	}
 	
 
