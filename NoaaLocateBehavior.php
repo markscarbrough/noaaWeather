@@ -74,13 +74,16 @@ class NoaaLocateBehavior extends CBehavior {
 			if(isset($inputRaw[$inputLocator])) {
 				
 				$validateMethod = 'validate' . ucfirst($inputLocator);
+				$sanitizeMethod = 'sanitize' . ucfirst($inputLocator);
 				if( method_exists( $this, $validateMethod  )) {
 					if( ! $this->$validateMethod($inputRaw[$inputLocator])) {
 						throw new Exception('Tried to set invalid location: ' . serialize($inputRaw[$inputLocator]) );
 					}
 				}
+				$inputData = method_exists( $this, $sanitizeMethod ) ? $this->$sanitizeMethod($inputRaw[$inputLocator]) : $inputRaw[$inputLocator]; 
 				$this->_location['inputLocator'] = $inputLocator;
-				$this->_location['input'][$inputLocator] = $inputRaw[$inputLocator];
+				$this->_location['inputLocator'] = $inputLocator;
+				$this->_location['input'][$inputLocator] = $inputData;
 				return;
 			}
 		}
@@ -118,6 +121,15 @@ class NoaaLocateBehavior extends CBehavior {
 				return true;	
 		}
 		return false;
+	}
+
+	/**
+	* Sanitizes coordinates input (converts to rounded float as noaa barfs if with too high precision)
+	*/		
+	public function sanitizeCoordinates($coordinates) {
+		$coordinates['latitude'] = round( $coordinates['latitude'], 2 ); 
+		$coordinates['longitude'] = round( $coordinates['longitude'], 2 ); 
+		return $coordinates;
 	}
 
 	/**
