@@ -21,7 +21,7 @@
  *
  * To add a new locator method:
  * - add a key to the $_location['supportedLocators'] array
- * - create an appropriate validateLocator method
+ * - create an appropriate validateLocator/sanitizeLocator methods
  * - create appropriate getLocationLocatorbyLocator translation methods
  */
 class NoaaLocateBehavior extends CBehavior {
@@ -82,7 +82,6 @@ class NoaaLocateBehavior extends CBehavior {
 				}
 				$inputData = method_exists( $this, $sanitizeMethod ) ? $this->$sanitizeMethod($inputRaw[$inputLocator]) : $inputRaw[$inputLocator]; 
 				$this->_location['inputLocator'] = $inputLocator;
-				$this->_location['inputLocator'] = $inputLocator;
 				$this->_location['input'][$inputLocator] = $inputData;
 				return;
 			}
@@ -140,6 +139,16 @@ class NoaaLocateBehavior extends CBehavior {
 			return true;	
 		return false;
 	}
+	
+	public function getNearestWeatherStations() 
+	{
+		if($this->_location['inputLocator'] != 'coordinates') 
+		{
+			$locateMethod = 'getLocationCoordinatesBy' . ucfirst($this->_location['inputLocator']);
+			$this->_location['input']['coordinates'] = $this->$locateMethod();
+		}
+		return $this->getlocationWeatherStationByCoordinates(true);
+	}
 
 	/**
 	* Translates weather stations into coordinates.
@@ -159,7 +168,7 @@ class NoaaLocateBehavior extends CBehavior {
 	/**
 	* Translates coordinates into weather stations.
 	*/		
-	protected function getlocationWeatherStationByCoordinates(){
+	protected function getlocationWeatherStationByCoordinates($returnArray = false){
 		$return = array();
 		$weatherStationDataProvider = Yii::createComponent('ext.noaaWeather.NoaaSqlDataProvider',
 			'SELECT * FROM noaa_weather_stations');
@@ -175,7 +184,7 @@ class NoaaLocateBehavior extends CBehavior {
 		}
 		ksort($return);
 		$return = array_values($return);
-		return $return[0]['station_id'];
+		return $returnArray ? $return : $return[0]['station_id'];
 	}
 
 	/**
