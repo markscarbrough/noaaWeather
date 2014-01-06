@@ -38,7 +38,7 @@ class NoaaForecastMapClickDataProvider extends CArrayDataProvider {
 		$this->attachBehavior('cache','ext.noaaWeather.NoaaCacheBehavior');
 		$this->attachBehavior('fetch','ext.noaaWeather.NoaaFetchRemoteBehavior');
 		$this->attachBehavior('locate',array(
-			'class' => 'NoaaLocateBehavior',
+			'class' => 'ext.noaaWeather.NoaaLocateBehavior',
 			'outputLocators' => array('coordinates'),
 			'location' => $location,
 		));
