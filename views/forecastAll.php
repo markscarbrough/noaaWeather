@@ -107,7 +107,7 @@ if(@is_array($weather['forecast'])) {
 		$i++;
 	}
 	// Display the tab widget
-	$this->widget('zii.widgets.jui.CJuiTabs', array('tabs'=>$tabs,'htmlOptions'=>array('class'=>'noaaForecastAllJuiTabs')));
+	$this->widget('zii.widgets.jui.CJuiTabs', array('tabs'=>$tabs,'htmlOptions'=>array('class'=>'noaaForecastAllJuiTabs'),'headerTemplate'=>'<li><a href="{url}" title="">{title}</a></li>'));
 } else {
 	// No weather array, display the error message
 	echo $errorMsg;
